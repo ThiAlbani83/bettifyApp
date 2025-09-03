@@ -187,7 +187,7 @@ const MenuV2 = ({ expanded, setExpanded }) => {
                 <div className="w-6 h-6 flex items-center justify-center text-blue-400">
                   <FaClipboardCheck className="w-5 h-5" />
                 </div>
-                <span className="text-sm font-medium">Compliance Check</span>
+                <span className="text-sm font-medium">AuditBETs</span>
               </Link>
             </li>
           </ul>
