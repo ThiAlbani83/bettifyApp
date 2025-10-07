@@ -36,7 +36,7 @@ export const betCrawlerData = [
     followers: 12900,
     influenciadores: 3,
     posts: 585,
-    lastActivity: "12-08-2025",
+    lastActivity: generateRecentDate(),
     status: "Não Regulamentada",
     risk: "Alto",
     domain: "pinbet.bet",

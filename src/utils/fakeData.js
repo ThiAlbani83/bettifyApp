@@ -1,3 +1,158 @@
+// Function to generate random date within the last 7 days in YYYY-MM-DD format
+const generateRecentPostDate = () => {
+  const today = new Date();
+  const daysAgo = Math.floor(Math.random() * 7); // Random number between 0-6 days ago
+  const date = new Date(today);
+  date.setDate(today.getDate() - daysAgo);
+
+  // Format as YYYY-MM-DD
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+// Function to generate datetime for posts within the last 7 days
+const generateRecentPostDateTime = () => {
+  const today = new Date();
+  const daysAgo = Math.floor(Math.random() * 7); // Random number between 0-6 days ago
+  const date = new Date(today);
+  date.setDate(today.getDate() - daysAgo);
+
+  // Random time between 08:00 and 22:00
+  const hours = Math.floor(Math.random() * 14) + 8; // 8-21
+  const minutes = Math.floor(Math.random() * 60);
+  const seconds = Math.floor(Math.random() * 60);
+
+  date.setHours(hours, minutes, seconds, 0);
+
+  // Format as YYYY-MM-DD HH:MM:SS
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hour = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  const sec = String(date.getSeconds()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
+};
+
+// Function to generate date range for the last 7 days
+const generateLastSevenDays = () => {
+  const dates = [];
+  const today = new Date();
+
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    dates.push(`${year}-${month}-${day}`);
+  }
+
+  return dates;
+};
+
+// Function to get current month start date
+const getCurrentMonthStart = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}-01`;
+};
+
+// Function to get current date
+const getCurrentDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+// Function to get last month start date
+const getLastMonthStart = () => {
+  const today = new Date();
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  const year = lastMonth.getFullYear();
+  const month = String(lastMonth.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}-01`;
+};
+
+// Function to get last month end date
+const getLastMonthEnd = () => {
+  const today = new Date();
+  const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+  const year = lastMonthEnd.getFullYear();
+  const month = String(lastMonthEnd.getMonth() + 1).padStart(2, "0");
+  const day = String(lastMonthEnd.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+// Function to generate future date within current month
+const generateFutureDate = () => {
+  const today = new Date();
+  const currentDay = today.getDate();
+  const lastDayOfMonth = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
+
+  // Generate a random day between current day and end of month
+  const futureDays =
+    Math.floor(Math.random() * (lastDayOfMonth - currentDay + 1)) + currentDay;
+  const futureDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    futureDays
+  );
+
+  const year = futureDate.getFullYear();
+  const month = String(futureDate.getMonth() + 1).padStart(2, "0");
+  const day = String(futureDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+// Function to generate future datetime within current month
+const generateFutureDateTime = () => {
+  const today = new Date();
+  const currentDay = today.getDate();
+  const lastDayOfMonth = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
+
+  // Generate a random day between current day and end of month
+  const futureDays =
+    Math.floor(Math.random() * (lastDayOfMonth - currentDay + 1)) + currentDay;
+  const futureDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    futureDays
+  );
+
+  // Random time between 08:00 and 18:00
+  const hours = Math.floor(Math.random() * 10) + 8; // 8-17
+  const minutes = Math.floor(Math.random() * 60);
+
+  futureDate.setHours(hours, minutes, 0, 0);
+
+  const year = futureDate.getFullYear();
+  const month = String(futureDate.getMonth() + 1).padStart(2, "0");
+  const day = String(futureDate.getDate()).padStart(2, "0");
+  const hour = String(futureDate.getHours()).padStart(2, "0");
+  const min = String(futureDate.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hour}:${min}:00`;
+};
+
 export const registerBet = [
   {
     empresa: "BetMax Brasil",
@@ -151,7 +306,7 @@ export const scrapingResults = [
     empresa: "BetMax Brasil",
     perfil: "@betmaxbr",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-15 14:30:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Venha fazer parte da BetMax e descubra como ter ganhos incríveis! Nossa plataforma oferece as melhores odds do mercado. #apostas #futebol #ganhe",
     linkPostagem: "https://instagram.com/p/betmaxbr12345",
@@ -163,7 +318,7 @@ export const scrapingResults = [
     empresa: "BetMax Brasil",
     perfil: "@betmax_brasil",
     redeSocial: "X",
-    dataPostagem: "2024-06-12 09:15:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Aposte hoje no jogo do Flamengo e tenha uma aposta garantida! Nossos especialistas analisaram todas as estatísticas. #BetMax #ApostaEsportiva",
     linkPostagem: "https://x.com/betmax_brasil/status/123456789",
@@ -177,7 +332,7 @@ export const scrapingResults = [
     empresa: "ApostaVip",
     perfil: "@apostavip",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-10 18:45:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Novo bônus de boas-vindas! Cadastre-se hoje e receba até R$200 para começar suas apostas. Termos e condições se aplicam. #ApostaVip #Bônus",
     linkPostagem: "https://instagram.com/p/apostavip54321",
@@ -189,7 +344,7 @@ export const scrapingResults = [
     empresa: "ApostaVip",
     perfil: "@vip_apostas",
     redeSocial: "X",
-    dataPostagem: "2024-06-08 21:30:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Aposte com a ApostaVip e tenha vitória assegurada nos jogos de hoje! Nossas dicas são baseadas em análises profundas. #ApostaVip #Futebol",
     linkPostagem: "https://x.com/vip_apostas/status/987654321",
@@ -203,7 +358,7 @@ export const scrapingResults = [
     empresa: "TurboBets",
     perfil: "@turbobets",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-14 12:20:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Quer ganhar uma renda extra? A TurboBets te ensina como fazer dinheiro fácil com apostas esportivas! Clique no link da bio. #TurboBets #Apostas",
     linkPostagem: "https://instagram.com/p/turbobets67890",
@@ -215,7 +370,7 @@ export const scrapingResults = [
     empresa: "TurboBets",
     perfil: "@turbobets_ofc",
     redeSocial: "X",
-    dataPostagem: "2024-06-11 16:40:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Novos mercados disponíveis para apostas na Champions League! Confira nossas odds competitivas e faça suas apostas. #TurboBets #ChampionsLeague",
     linkPostagem: "https://x.com/turbobets_ofc/status/135792468",
@@ -229,7 +384,7 @@ export const scrapingResults = [
     empresa: "MegaOddz",
     perfil: "@megaoddz",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-13 10:05:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Aposte na MegaOddz e tenha lucro garantido! Nossos algoritmos selecionam as melhores oportunidades para você não perder. #MegaOddz #Lucro",
     linkPostagem: "https://instagram.com/p/megaoddz24680",
@@ -241,7 +396,7 @@ export const scrapingResults = [
     empresa: "MegaOddz",
     perfil: "@oddz_mega",
     redeSocial: "X",
-    dataPostagem: "2024-06-09 14:15:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Dicas quentes para o fim de semana! Aposte agora e garanta seu dinheiro rápido com a MegaOddz! #Apostas #DicasQuentes",
     linkPostagem: "https://x.com/oddz_mega/status/246813579",
@@ -255,7 +410,7 @@ export const scrapingResults = [
     empresa: "PlayBetNow",
     perfil: "@playbetnow",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-07 19:30:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Novo cassino ao vivo disponível! Jogue agora e divirta-se com nossos dealers profissionais. Bônus especial para novos jogadores. #PlayBetNow #Casino",
     linkPostagem: "https://instagram.com/p/playbetnow13579",
@@ -267,7 +422,7 @@ export const scrapingResults = [
     empresa: "PlayBetNow",
     perfil: "@playbet_oficial",
     redeSocial: "X",
-    dataPostagem: "2024-06-05 11:45:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Faça seu investimento seguro na PlayBetNow! Garantimos 100% de retorno nas suas primeiras apostas. Ganhar sem risco nunca foi tão fácil! #PlayBetNow",
     linkPostagem: "https://x.com/playbet_oficial/status/975318642",
@@ -285,7 +440,7 @@ export const scrapingResults = [
     empresa: "LuckZone",
     perfil: "@luckzonebr",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-16 08:20:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Quer uma renda garantida? A LuckZone tem o sistema perfeito para você! Faça dinheiro agora mesmo com nossas dicas exclusivas. #LuckZone #Apostas",
     linkPostagem: "https://instagram.com/p/luckzonebr86420",
@@ -297,7 +452,7 @@ export const scrapingResults = [
     empresa: "LuckZone",
     perfil: "@luckzone_bets",
     redeSocial: "X",
-    dataPostagem: "2024-06-14 15:10:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Promoção especial para o campeonato brasileiro! Aposte com a LuckZone e receba odds aumentadas. Consulte regulamento no site. #LuckZone #Brasileirão",
     linkPostagem: "https://x.com/luckzone_bets/status/864209753",
@@ -311,7 +466,7 @@ export const scrapingResults = [
     empresa: "TopAposta360",
     perfil: "@topaposta360",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-12 17:25:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Nossa aposta infalível para hoje! Siga nossas dicas e tenha retorno certo em seus investimentos. Ganhos imediatos garantidos! #TopAposta360",
     linkPostagem: "https://instagram.com/p/topaposta360-97531",
@@ -327,7 +482,7 @@ export const scrapingResults = [
     empresa: "TopAposta360",
     perfil: "@top_aposta360",
     redeSocial: "X",
-    dataPostagem: "2024-06-10 13:40:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Novo app disponível! Baixe agora a TopAposta360 e tenha a melhor experiência de apostas na palma da sua mão. #TopAposta360 #NovoApp",
     linkPostagem: "https://x.com/top_aposta360/status/753197531",
@@ -341,7 +496,7 @@ export const scrapingResults = [
     empresa: "WinMaster Bet",
     perfil: "@winmasterbet",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-08 09:50:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Fique rico apostando com a WinMaster! Nosso sistema garante que você vai ganhar sempre! Lucro sem esforço para todos os apostadores. #WinMaster",
     linkPostagem: "https://instagram.com/p/winmasterbet-24680",
@@ -357,7 +512,7 @@ export const scrapingResults = [
     empresa: "WinMaster Bet",
     perfil: "@winmaster_ofc",
     redeSocial: "X",
-    dataPostagem: "2024-06-06 20:15:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Acompanhe os resultados ao vivo na WinMaster! Oferecemos as melhores estatísticas para suas apostas. #WinMaster #AoVivo",
     linkPostagem: "https://x.com/winmaster_ofc/status/246801357",
@@ -371,7 +526,7 @@ export const scrapingResults = [
     empresa: "BetOnFire",
     perfil: "@betonfire",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-15 16:35:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Aposte na BetOnFire e tenha 100% lucro! Nossa plataforma oferece certeza de lucro em todas as apostas, sem chance de perda! #BetOnFire",
     linkPostagem: "https://instagram.com/p/betonfire-13579",
@@ -387,7 +542,7 @@ export const scrapingResults = [
     empresa: "BetOnFire",
     perfil: "@betonfirebr",
     redeSocial: "X",
-    dataPostagem: "2024-06-13 11:20:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Novos jogos de cassino disponíveis! Venha se divertir na BetOnFire e aproveite nossos bônus exclusivos. #BetOnFire #Casino",
     linkPostagem: "https://x.com/betonfirebr/status/135792468",
@@ -401,7 +556,7 @@ export const scrapingResults = [
     empresa: "GoldBets Club",
     perfil: "@goldbetsclub",
     redeSocial: "Instagram",
-    dataPostagem: "2024-06-11 14:55:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Invista e ganhe com a GoldBets! Oferecemos segurança garantida e ganhos fixos para todos os apostadores. Comece agora! #GoldBets #Investimento",
     linkPostagem: "https://instagram.com/p/goldbetsclub-97531",
@@ -417,7 +572,7 @@ export const scrapingResults = [
     empresa: "GoldBets Club",
     perfil: "@goldbets_club",
     redeSocial: "X",
-    dataPostagem: "2024-06-09 18:30:00",
+    dataPostagem: generateRecentPostDateTime(),
     textoPostagem:
       "Acompanhe nossas análises esportivas diárias! A GoldBets Club traz informações exclusivas para melhorar suas apostas. #GoldBets #Análises",
     linkPostagem: "https://x.com/goldbets_club/status/864209753",
@@ -433,13 +588,13 @@ export const postFrequencyData = [
     empresa: "BetMax Brasil",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 3 },
-      { data: "2024-06-11", quantidadePostagens: 2 },
-      { data: "2024-06-12", quantidadePostagens: 4 },
-      { data: "2024-06-13", quantidadePostagens: 1 },
-      { data: "2024-06-14", quantidadePostagens: 3 },
-      { data: "2024-06-15", quantidadePostagens: 2 },
-      { data: "2024-06-16", quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
     ],
     mediaPostagens: 2.8,
     violacoesDetectadas: 4,
@@ -448,13 +603,13 @@ export const postFrequencyData = [
     empresa: "ApostaVip",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 4 },
-      { data: "2024-06-11", quantidadePostagens: 3 },
-      { data: "2024-06-12", quantidadePostagens: 5 },
-      { data: "2024-06-13", quantidadePostagens: 2 },
-      { data: "2024-06-14", quantidadePostagens: 3 },
-      { data: "2024-06-15", quantidadePostagens: 4 },
-      { data: "2024-06-16", quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
     ],
     mediaPostagens: 3.4,
     violacoesDetectadas: 2,
@@ -463,13 +618,13 @@ export const postFrequencyData = [
     empresa: "TurboBets",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 1 },
-      { data: "2024-06-11", quantidadePostagens: 2 },
-      { data: "2024-06-12", quantidadePostagens: 1 },
-      { data: "2024-06-13", quantidadePostagens: 0 },
-      { data: "2024-06-14", quantidadePostagens: 3 },
-      { data: "2024-06-15", quantidadePostagens: 1 },
-      { data: "2024-06-16", quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[0], quantidadePostagens: 0 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
     ],
     mediaPostagens: 1.4,
     violacoesDetectadas: 3,
@@ -478,13 +633,13 @@ export const postFrequencyData = [
     empresa: "MegaOddz",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 5 },
-      { data: "2024-06-11", quantidadePostagens: 4 },
-      { data: "2024-06-12", quantidadePostagens: 3 },
-      { data: "2024-06-13", quantidadePostagens: 6 },
-      { data: "2024-06-14", quantidadePostagens: 4 },
-      { data: "2024-06-15", quantidadePostagens: 5 },
-      { data: "2024-06-16", quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[6], quantidadePostagens: 6 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
     ],
     mediaPostagens: 4.3,
     violacoesDetectadas: 5,
@@ -493,13 +648,13 @@ export const postFrequencyData = [
     empresa: "PlayBetNow",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 2 },
-      { data: "2024-06-11", quantidadePostagens: 3 },
-      { data: "2024-06-12", quantidadePostagens: 2 },
-      { data: "2024-06-13", quantidadePostagens: 4 },
-      { data: "2024-06-14", quantidadePostagens: 2 },
-      { data: "2024-06-15", quantidadePostagens: 3 },
-      { data: "2024-06-16", quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
     ],
     mediaPostagens: 2.6,
     violacoesDetectadas: 2,
@@ -508,13 +663,13 @@ export const postFrequencyData = [
     empresa: "LuckZone",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 3 },
-      { data: "2024-06-11", quantidadePostagens: 2 },
-      { data: "2024-06-12", quantidadePostagens: 3 },
-      { data: "2024-06-13", quantidadePostagens: 2 },
-      { data: "2024-06-14", quantidadePostagens: 4 },
-      { data: "2024-06-15", quantidadePostagens: 3 },
-      { data: "2024-06-16", quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
     ],
     mediaPostagens: 3.1,
     violacoesDetectadas: 3,
@@ -523,13 +678,13 @@ export const postFrequencyData = [
     empresa: "TopAposta360",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 1 },
-      { data: "2024-06-11", quantidadePostagens: 1 },
-      { data: "2024-06-12", quantidadePostagens: 2 },
-      { data: "2024-06-13", quantidadePostagens: 1 },
-      { data: "2024-06-14", quantidadePostagens: 0 },
-      { data: "2024-06-15", quantidadePostagens: 1 },
-      { data: "2024-06-16", quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[0], quantidadePostagens: 0 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
     ],
     mediaPostagens: 1.0,
     violacoesDetectadas: 2,
@@ -538,13 +693,13 @@ export const postFrequencyData = [
     empresa: "WinMaster Bet",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 4 },
-      { data: "2024-06-11", quantidadePostagens: 5 },
-      { data: "2024-06-12", quantidadePostagens: 3 },
-      { data: "2024-06-13", quantidadePostagens: 4 },
-      { data: "2024-06-14", quantidadePostagens: 6 },
-      { data: "2024-06-15", quantidadePostagens: 4 },
-      { data: "2024-06-16", quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[6], quantidadePostagens: 6 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[5], quantidadePostagens: 5 },
     ],
     mediaPostagens: 4.4,
     violacoesDetectadas: 6,
@@ -553,13 +708,13 @@ export const postFrequencyData = [
     empresa: "BetOnFire",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 2 },
-      { data: "2024-06-11", quantidadePostagens: 3 },
-      { data: "2024-06-12", quantidadePostagens: 2 },
-      { data: "2024-06-13", quantidadePostagens: 2 },
-      { data: "2024-06-14", quantidadePostagens: 3 },
-      { data: "2024-06-15", quantidadePostagens: 4 },
-      { data: "2024-06-16", quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[3], quantidadePostagens: 3 },
+      { data: generateLastSevenDays()[4], quantidadePostagens: 4 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
     ],
     mediaPostagens: 2.6,
     violacoesDetectadas: 4,
@@ -568,13 +723,13 @@ export const postFrequencyData = [
     empresa: "GoldBets Club",
     redeSocial: "Instagram",
     ultimosDias: [
-      { data: "2024-06-10", quantidadePostagens: 1 },
-      { data: "2024-06-11", quantidadePostagens: 2 },
-      { data: "2024-06-12", quantidadePostagens: 1 },
-      { data: "2024-06-13", quantidadePostagens: 1 },
-      { data: "2024-06-14", quantidadePostagens: 0 },
-      { data: "2024-06-15", quantidadePostagens: 1 },
-      { data: "2024-06-16", quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[2], quantidadePostagens: 2 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[0], quantidadePostagens: 0 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
+      { data: generateLastSevenDays()[1], quantidadePostagens: 1 },
     ],
     mediaPostagens: 1.0,
     violacoesDetectadas: 3,
@@ -761,7 +916,7 @@ export const violationAlerts = [
     id: "VA001",
     empresa: "BetMax Brasil",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-16 09:45:23",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["ganhe dinheiro fácil"],
     linkPostagem: "https://instagram.com/p/betmaxbr12345",
     statusRevisao: "Pendente",
@@ -771,7 +926,7 @@ export const violationAlerts = [
     id: "VA002",
     empresa: "WinMaster Bet",
     redeSocial: "X",
-    dataDeteccao: "2024-06-16 10:12:45",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["fique rico apostando", "ganhar sempre"],
     linkPostagem: "https://x.com/winmaster_ofc/status/246801357",
     statusRevisao: "Em análise",
@@ -781,7 +936,7 @@ export const violationAlerts = [
     id: "VA003",
     empresa: "MegaOddz",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-16 11:30:18",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["lucro garantido", "sem perder"],
     linkPostagem: "https://instagram.com/p/megaoddz24680",
     statusRevisao: "Pendente",
@@ -791,7 +946,7 @@ export const violationAlerts = [
     id: "VA004",
     empresa: "ApostaVip",
     redeSocial: "X",
-    dataDeteccao: "2024-06-15 16:45:32",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["vitória assegurada"],
     linkPostagem: "https://x.com/vip_apostas/status/987654321",
     statusRevisao: "Concluída",
@@ -801,7 +956,7 @@ export const violationAlerts = [
     id: "VA005",
     empresa: "BetOnFire",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-15 14:22:10",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["100% lucro", "sem chance de perda", "certeza de lucro"],
     linkPostagem: "https://instagram.com/p/betonfire-13579",
     statusRevisao: "Em análise",
@@ -811,7 +966,7 @@ export const violationAlerts = [
     id: "VA006",
     empresa: "LuckZone",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-16 08:55:42",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["renda garantida", "faça dinheiro agora"],
     linkPostagem: "https://instagram.com/p/luckzonebr86420",
     statusRevisao: "Pendente",
@@ -821,7 +976,7 @@ export const violationAlerts = [
     id: "VA007",
     empresa: "TopAposta360",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-15 09:15:33",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["aposta infalível", "retorno certo", "ganhos imediatos"],
     linkPostagem: "https://instagram.com/p/topaposta360-97531",
     statusRevisao: "Concluída",
@@ -831,7 +986,7 @@ export const violationAlerts = [
     id: "VA008",
     empresa: "TurboBets",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-14 17:40:21",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["dinheiro fácil"],
     linkPostagem: "https://instagram.com/p/turbobets67890",
     statusRevisao: "Concluída",
@@ -841,7 +996,7 @@ export const violationAlerts = [
     id: "VA009",
     empresa: "GoldBets Club",
     redeSocial: "Instagram",
-    dataDeteccao: "2024-06-16 07:30:15",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: ["invista e ganhe", "segurança garantida", "ganhos fixos"],
     linkPostagem: "https://instagram.com/p/goldbetsclub-97531",
     statusRevisao: "Pendente",
@@ -851,7 +1006,7 @@ export const violationAlerts = [
     id: "VA010",
     empresa: "PlayBetNow",
     redeSocial: "X",
-    dataDeteccao: "2024-06-15 13:10:55",
+    dataDeteccao: generateRecentPostDateTime(),
     termosViolados: [
       "ganhar sem risco",
       "100% de retorno",
@@ -867,8 +1022,8 @@ export const violationAlerts = [
 export const monitoringHistory = [
   {
     empresa: "BetMax Brasil",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 42,
     violacoesDetectadas: 10,
     percentualViolacoes: 23.8,
@@ -877,8 +1032,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "BetMax Brasil",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 45,
     violacoesDetectadas: 12,
     percentualViolacoes: 26.7,
@@ -887,8 +1042,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "ApostaVip",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 58,
     violacoesDetectadas: 13,
     percentualViolacoes: 22.4,
@@ -897,8 +1052,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "ApostaVip",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 62,
     violacoesDetectadas: 15,
     percentualViolacoes: 24.2,
@@ -907,8 +1062,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "TurboBets",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 35,
     violacoesDetectadas: 12,
     percentualViolacoes: 34.3,
@@ -917,8 +1072,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "TurboBets",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 38,
     violacoesDetectadas: 11,
     percentualViolacoes: 28.9,
@@ -927,8 +1082,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "MegaOddz",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 70,
     violacoesDetectadas: 20,
     percentualViolacoes: 28.6,
@@ -937,8 +1092,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "MegaOddz",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 75,
     violacoesDetectadas: 23,
     percentualViolacoes: 30.7,
@@ -947,8 +1102,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "PlayBetNow",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 48,
     violacoesDetectadas: 12,
     percentualViolacoes: 25.0,
@@ -957,8 +1112,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "PlayBetNow",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 52,
     violacoesDetectadas: 14,
     percentualViolacoes: 26.9,
@@ -967,8 +1122,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "LuckZone",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 55,
     violacoesDetectadas: 16,
     percentualViolacoes: 29.1,
@@ -977,8 +1132,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "LuckZone",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 58,
     violacoesDetectadas: 18,
     percentualViolacoes: 31.0,
@@ -987,8 +1142,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "TopAposta360",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 30,
     violacoesDetectadas: 8,
     percentualViolacoes: 26.7,
@@ -997,8 +1152,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "TopAposta360",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 32,
     violacoesDetectadas: 9,
     percentualViolacoes: 28.1,
@@ -1007,8 +1162,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "WinMaster Bet",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 78,
     violacoesDetectadas: 24,
     percentualViolacoes: 30.8,
@@ -1017,8 +1172,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "WinMaster Bet",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 82,
     violacoesDetectadas: 27,
     percentualViolacoes: 32.9,
@@ -1027,8 +1182,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "BetOnFire",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 45,
     violacoesDetectadas: 14,
     percentualViolacoes: 31.1,
@@ -1037,8 +1192,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "BetOnFire",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 48,
     violacoesDetectadas: 16,
     percentualViolacoes: 33.3,
@@ -1047,8 +1202,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "GoldBets Club",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
     totalPostagens: 27,
     violacoesDetectadas: 9,
     percentualViolacoes: 33.3,
@@ -1057,8 +1212,8 @@ export const monitoringHistory = [
   },
   {
     empresa: "GoldBets Club",
-    periodoInicio: "2024-06-01",
-    periodoFim: "2024-06-16",
+    periodoInicio: getCurrentMonthStart(),
+    periodoFim: getCurrentDate(),
     totalPostagens: 29,
     violacoesDetectadas: 10,
     percentualViolacoes: 34.5,
@@ -1072,9 +1227,9 @@ export const complianceReports = [
   {
     id: "CR001",
     empresa: "BetMax Brasil",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-05",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1082,30 +1237,30 @@ export const complianceReports = [
       "Implementar processo de aprovação prévia para postagens em redes sociais",
       "Realizar treinamento com equipe de marketing sobre regulamentações",
     ],
-    prazoAdequacao: "2024-06-20",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
   {
     id: "CR002",
     empresa: "ApostaVip",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-05",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Parcialmente conforme",
     nivelRisco: "Médio",
     recomendacoes: [
       "Remover postagens contendo o termo 'vitória assegurada'",
       "Revisar diretrizes de comunicação em redes sociais",
     ],
-    prazoAdequacao: "2024-06-15",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Concluído",
   },
   {
     id: "CR003",
     empresa: "TurboBets",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-06",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1113,15 +1268,15 @@ export const complianceReports = [
       "Implementar sistema de verificação prévia de conteúdo",
       "Realizar treinamento com equipe de marketing",
     ],
-    prazoAdequacao: "2024-06-25",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
   {
     id: "CR004",
     empresa: "MegaOddz",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-06",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1129,30 +1284,30 @@ export const complianceReports = [
       "Revisar estratégia de comunicação em redes sociais",
       "Implementar processo de aprovação prévia para postagens",
     ],
-    prazoAdequacao: "2024-06-30",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Não iniciado",
   },
   {
     id: "CR005",
     empresa: "PlayBetNow",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-07",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Parcialmente conforme",
     nivelRisco: "Médio",
     recomendacoes: [
       "Revisar postagens contendo termos proibidos",
       "Implementar diretrizes claras para comunicação em redes sociais",
     ],
-    prazoAdequacao: "2024-06-22",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
   {
     id: "CR006",
     empresa: "LuckZone",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-07",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1160,30 +1315,30 @@ export const complianceReports = [
       "Implementar processo de revisão de conteúdo",
       "Realizar treinamento com equipe de marketing",
     ],
-    prazoAdequacao: "2024-06-28",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
   {
     id: "CR007",
     empresa: "TopAposta360",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-08",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Parcialmente conforme",
     nivelRisco: "Médio",
     recomendacoes: [
       "Revisar postagens contendo os termos 'aposta infalível' e 'retorno certo'",
       "Implementar diretrizes para comunicação responsável",
     ],
-    prazoAdequacao: "2024-06-20",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Concluído",
   },
   {
     id: "CR008",
     empresa: "WinMaster Bet",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-08",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Crítico",
     recomendacoes: [
@@ -1192,15 +1347,15 @@ export const complianceReports = [
       "Realizar treinamento obrigatório com toda equipe de marketing",
       "Estabelecer monitoramento contínuo de todas as redes sociais",
     ],
-    prazoAdequacao: "2024-06-15",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
   {
     id: "CR009",
     empresa: "BetOnFire",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-09",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1208,15 +1363,15 @@ export const complianceReports = [
       "Revisar estratégia de comunicação em redes sociais",
       "Implementar processo de aprovação prévia para postagens",
     ],
-    prazoAdequacao: "2024-06-25",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Não iniciado",
   },
   {
     id: "CR010",
     empresa: "GoldBets Club",
-    periodoInicio: "2024-05-01",
-    periodoFim: "2024-05-31",
-    dataEmissao: "2024-06-09",
+    periodoInicio: getLastMonthStart(),
+    periodoFim: getLastMonthEnd(),
+    dataEmissao: generateRecentPostDate(),
     statusCompliance: "Não conforme",
     nivelRisco: "Alto",
     recomendacoes: [
@@ -1224,7 +1379,7 @@ export const complianceReports = [
       "Implementar processo de aprovação de conteúdo",
       "Realizar treinamento com equipe de marketing",
     ],
-    prazoAdequacao: "2024-06-23",
+    prazoAdequacao: generateFutureDate(),
     statusAcao: "Em andamento",
   },
 ];
@@ -1234,7 +1389,7 @@ export const monitoringSchedules = [
   {
     id: "MS001",
     empresa: "BetMax Brasil",
-    dataAgendamento: "2024-06-18 09:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Ana Silva",
@@ -1244,7 +1399,7 @@ export const monitoringSchedules = [
   {
     id: "MS002",
     empresa: "BetMax Brasil",
-    dataAgendamento: "2024-06-21 14:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Ana Silva",
@@ -1254,7 +1409,7 @@ export const monitoringSchedules = [
   {
     id: "MS003",
     empresa: "ApostaVip",
-    dataAgendamento: "2024-06-19 10:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Carlos Mendes",
@@ -1264,7 +1419,7 @@ export const monitoringSchedules = [
   {
     id: "MS004",
     empresa: "ApostaVip",
-    dataAgendamento: "2024-06-22 11:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Parcial",
     responsavel: "Carlos Mendes",
@@ -1274,7 +1429,7 @@ export const monitoringSchedules = [
   {
     id: "MS005",
     empresa: "ApostaVip",
-    dataAgendamento: "2024-06-25 15:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Carlos Mendes",
@@ -1284,7 +1439,7 @@ export const monitoringSchedules = [
   {
     id: "MS006",
     empresa: "TurboBets",
-    dataAgendamento: "2024-06-20 09:15:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Mariana Costa",
@@ -1294,7 +1449,7 @@ export const monitoringSchedules = [
   {
     id: "MS007",
     empresa: "MegaOddz",
-    dataAgendamento: "2024-06-17 13:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Pedro Santos",
@@ -1304,7 +1459,7 @@ export const monitoringSchedules = [
   {
     id: "MS008",
     empresa: "MegaOddz",
-    dataAgendamento: "2024-06-20 14:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Pedro Santos",
@@ -1314,7 +1469,7 @@ export const monitoringSchedules = [
   {
     id: "MS009",
     empresa: "MegaOddz",
-    dataAgendamento: "2024-06-23 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Pedro Santos",
@@ -1324,7 +1479,7 @@ export const monitoringSchedules = [
   {
     id: "MS010",
     empresa: "PlayBetNow",
-    dataAgendamento: "2024-06-19 16:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Juliana Alves",
@@ -1334,7 +1489,7 @@ export const monitoringSchedules = [
   {
     id: "MS011",
     empresa: "PlayBetNow",
-    dataAgendamento: "2024-06-22 09:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Parcial",
     responsavel: "Juliana Alves",
@@ -1344,7 +1499,7 @@ export const monitoringSchedules = [
   {
     id: "MS012",
     empresa: "LuckZone",
-    dataAgendamento: "2024-06-18 11:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Discord"],
     tipoMonitoramento: "Completo",
     responsavel: "Rafael Lima",
@@ -1355,7 +1510,7 @@ export const monitoringSchedules = [
   {
     id: "MS013",
     empresa: "LuckZone",
-    dataAgendamento: "2024-06-21 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Discord"],
     tipoMonitoramento: "Completo",
     responsavel: "Rafael Lima",
@@ -1365,7 +1520,7 @@ export const monitoringSchedules = [
   {
     id: "MS014",
     empresa: "TopAposta360",
-    dataAgendamento: "2024-06-17 09:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Fernanda Oliveira",
@@ -1375,7 +1530,7 @@ export const monitoringSchedules = [
   {
     id: "MS015",
     empresa: "WinMaster Bet",
-    dataAgendamento: "2024-06-17 10:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Lucas Martins",
@@ -1385,7 +1540,7 @@ export const monitoringSchedules = [
   {
     id: "MS016",
     empresa: "WinMaster Bet",
-    dataAgendamento: "2024-06-19 14:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Lucas Martins",
@@ -1395,7 +1550,7 @@ export const monitoringSchedules = [
   {
     id: "MS017",
     empresa: "WinMaster Bet",
-    dataAgendamento: "2024-06-22 13:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Telegram"],
     tipoMonitoramento: "Completo",
     responsavel: "Lucas Martins",
@@ -1405,7 +1560,7 @@ export const monitoringSchedules = [
   {
     id: "MS018",
     empresa: "BetOnFire",
-    dataAgendamento: "2024-06-18 15:00:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Camila Rocha",
@@ -1415,7 +1570,7 @@ export const monitoringSchedules = [
   {
     id: "MS019",
     empresa: "BetOnFire",
-    dataAgendamento: "2024-06-21 16:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Camila Rocha",
@@ -1425,7 +1580,7 @@ export const monitoringSchedules = [
   {
     id: "MS020",
     empresa: "GoldBets Club",
-    dataAgendamento: "2024-06-17 14:30:00",
+    dataAgendamento: generateFutureDateTime(),
     redesMonitorar: ["Instagram", "X", "Facebook"],
     tipoMonitoramento: "Completo",
     responsavel: "Bruno Almeida",
@@ -1476,7 +1631,7 @@ export const systemStats = {
 export const systemLogs = [
   {
     id: "LOG001",
-    timestamp: "2024-06-16 08:45:12",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Ana Silva",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1484,7 +1639,7 @@ export const systemLogs = [
   },
   {
     id: "LOG002",
-    timestamp: "2024-06-16 08:47:30",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Ana Silva",
     acao: "Acesso ao módulo de monitoramento",
     detalhes: "Visualização da lista de empresas",
@@ -1492,7 +1647,7 @@ export const systemLogs = [
   },
   {
     id: "LOG003",
-    timestamp: "2024-06-16 08:50:15",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Ana Silva",
     acao: "Agendamento de monitoramento",
     detalhes: "Criação do agendamento MS001 para BetMax Brasil",
@@ -1500,7 +1655,7 @@ export const systemLogs = [
   },
   {
     id: "LOG004",
-    timestamp: "2024-06-16 09:12:35",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Carlos Mendes",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1508,7 +1663,7 @@ export const systemLogs = [
   },
   {
     id: "LOG005",
-    timestamp: "2024-06-16 09:15:22",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Carlos Mendes",
     acao: "Acesso ao módulo de alertas",
     detalhes: "Visualização de alertas pendentes",
@@ -1516,7 +1671,7 @@ export const systemLogs = [
   },
   {
     id: "LOG006",
-    timestamp: "2024-06-16 09:20:45",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Carlos Mendes",
     acao: "Atualização de alerta",
     detalhes: "Alteração do status do alerta VA003 para 'Em análise'",
@@ -1524,7 +1679,7 @@ export const systemLogs = [
   },
   {
     id: "LOG007",
-    timestamp: "2024-06-16 09:30:55",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Rafael Lima",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1532,7 +1687,7 @@ export const systemLogs = [
   },
   {
     id: "LOG008",
-    timestamp: "2024-06-16 09:35:10",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Rafael Lima",
     acao: "Acesso ao módulo de relatórios",
     detalhes: "Geração de relatório para LuckZone",
@@ -1540,7 +1695,7 @@ export const systemLogs = [
   },
   {
     id: "LOG009",
-    timestamp: "2024-06-16 09:45:30",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Rafael Lima",
     acao: "Exportação de relatório",
     detalhes: "Exportação em formato PDF do relatório de LuckZone",
@@ -1548,7 +1703,7 @@ export const systemLogs = [
   },
   {
     id: "LOG010",
-    timestamp: "2024-06-16 09:55:18",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Bruno Almeida",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1556,7 +1711,7 @@ export const systemLogs = [
   },
   {
     id: "LOG011",
-    timestamp: "2024-06-16 10:00:25",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Bruno Almeida",
     acao: "Acesso ao módulo de monitoramento",
     detalhes: "Visualização de agendamentos",
@@ -1564,7 +1719,7 @@ export const systemLogs = [
   },
   {
     id: "LOG012",
-    timestamp: "2024-06-16 10:05:47",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Pedro Santos",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1572,7 +1727,7 @@ export const systemLogs = [
   },
   {
     id: "LOG013",
-    timestamp: "2024-06-16 10:10:33",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Pedro Santos",
     acao: "Acesso ao módulo de alertas",
     detalhes: "Visualização de alertas para MegaOddz",
@@ -1580,7 +1735,7 @@ export const systemLogs = [
   },
   {
     id: "LOG014",
-    timestamp: "2024-06-16 10:20:15",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Pedro Santos",
     acao: "Atualização de alerta",
     detalhes: "Alteração do status do alerta VA003 para 'Concluído'",
@@ -1588,7 +1743,7 @@ export const systemLogs = [
   },
   {
     id: "LOG015",
-    timestamp: "2024-06-16 10:45:22",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Marcelo Souza",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1596,7 +1751,7 @@ export const systemLogs = [
   },
   {
     id: "LOG016",
-    timestamp: "2024-06-16 10:50:40",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Marcelo Souza",
     acao: "Acesso ao módulo de administração",
     detalhes: "Visualização de configurações do sistema",
@@ -1604,7 +1759,7 @@ export const systemLogs = [
   },
   {
     id: "LOG017",
-    timestamp: "2024-06-16 11:00:15",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Marcelo Souza",
     acao: "Atualização de configurações",
     detalhes: "Alteração nas configurações de monitoramento automático",
@@ -1612,7 +1767,7 @@ export const systemLogs = [
   },
   {
     id: "LOG018",
-    timestamp: "2024-06-16 11:20:45",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Roberto Gomes",
     acao: "Login no sistema",
     detalhes: "Login bem-sucedido",
@@ -1620,7 +1775,7 @@ export const systemLogs = [
   },
   {
     id: "LOG019",
-    timestamp: "2024-06-16 11:25:30",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Roberto Gomes",
     acao: "Acesso ao módulo de relatórios",
     detalhes: "Visualização de relatórios gerenciais",
@@ -1628,7 +1783,7 @@ export const systemLogs = [
   },
   {
     id: "LOG020",
-    timestamp: "2024-06-16 11:35:20",
+    timestamp: generateRecentPostDateTime(),
     usuario: "Roberto Gomes",
     acao: "Exportação de relatório",
     detalhes: "Exportação em formato Excel do relatório gerencial mensal",
@@ -1886,111 +2041,111 @@ export const scheduledMonitorings = [
     id: "MS001",
     empresa: "BetMax Brasil",
     redesSociais: ["Instagram", "X", "Facebook"],
-    dataAgendamento: "2024-06-17 08:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Ana Silva",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-17 08:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS002",
     empresa: "ApostaVip",
     redesSociais: ["Instagram", "X", "Telegram", "Facebook"],
-    dataAgendamento: "2024-06-17 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Carlos Mendes",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-17 10:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS003",
     empresa: "TurboBets",
     redesSociais: ["Instagram", "X", "Facebook"],
-    dataAgendamento: "2024-06-18 08:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Mariana Costa",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-18 08:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS004",
     empresa: "MegaOddz",
     redesSociais: ["Instagram", "Telegram", "X", "Facebook"],
-    dataAgendamento: "2024-06-18 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Pedro Santos",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-18 10:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS005",
     empresa: "PlayBetNow",
     redesSociais: ["Instagram", "Facebook", "X"],
-    dataAgendamento: "2024-06-19 08:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Juliana Alves",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-19 08:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS006",
     empresa: "LuckZone",
     redesSociais: ["Instagram", "Discord", "X", "Facebook"],
-    dataAgendamento: "2024-06-19 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Rafael Lima",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-19 10:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS007",
     empresa: "TopAposta360",
     redesSociais: ["Instagram", "X", "Facebook"],
-    dataAgendamento: "2024-06-20 08:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Fernanda Oliveira",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-20 08:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS008",
     empresa: "WinMaster Bet",
     redesSociais: ["Instagram", "Telegram", "X", "Facebook"],
-    dataAgendamento: "2024-06-20 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Lucas Martins",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-20 10:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS009",
     empresa: "BetOnFire",
     redesSociais: ["Instagram", "Facebook", "X"],
-    dataAgendamento: "2024-06-21 08:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Camila Rocha",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-21 08:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
   {
     id: "MS010",
     empresa: "GoldBets Club",
     redesSociais: ["Instagram", "X", "Facebook"],
-    dataAgendamento: "2024-06-21 10:00:00",
+    dataAgendamento: generateFutureDateTime(),
     frequencia: "Semanal",
     responsavel: "Bruno Almeida",
     status: "Agendado",
     ultimaExecucao: null,
-    proximaExecucao: "2024-06-21 10:00:00",
+    proximaExecucao: generateFutureDateTime(),
   },
 ];
 
