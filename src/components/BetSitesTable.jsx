@@ -1,25 +1,192 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import jsPDF from "jspdf";
 
 const BetSitesTable = ({ results }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [imageModal, setImageModal] = useState({
+    open: false,
+    src: "",
+    title: "",
+  });
 
-  const handleBacenClick = (row) => {
-    setSelectedRow(row);
-    setModalOpen(true);
+  // Fechar modal de imagem com tecla ESC
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape" && imageModal.open) {
+        setImageModal({ open: false, src: "", title: "" });
+      }
+    };
+
+    document.addEventListener("keydown", handleEscKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [imageModal.open]);
+
+  const handleDownloadPDF = (row) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const maxWidth = pageWidth - 2 * margin;
+    let yPosition = 20;
+
+    // Função auxiliar para adicionar texto com quebra de linha
+    const addText = (
+      text,
+      fontSize = 10,
+      isBold = false,
+      color = [0, 0, 0]
+    ) => {
+      doc.setFontSize(fontSize);
+      doc.setTextColor(color[0], color[1], color[2]);
+      if (isBold) {
+        doc.setFont(undefined, "bold");
+      } else {
+        doc.setFont(undefined, "normal");
+      }
+
+      const lines = doc.splitTextToSize(text, maxWidth);
+      lines.forEach((line) => {
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(line, margin, yPosition);
+        yPosition += fontSize * 0.5;
+      });
+      yPosition += 3;
+    };
+
+    const addSection = (title) => {
+      yPosition += 5;
+      doc.setFillColor(59, 130, 246);
+      doc.rect(margin, yPosition - 5, maxWidth, 8, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(11);
+      doc.setFont(undefined, "bold");
+      doc.text(title, margin + 2, yPosition);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 8;
+    };
+
+    const addField = (label, value) => {
+      doc.setFontSize(9);
+      doc.setFont(undefined, "bold");
+      doc.setTextColor(55, 65, 81);
+      doc.text(label + ":", margin, yPosition);
+      doc.setFont(undefined, "normal");
+      doc.setTextColor(0, 0, 0);
+      const lines = doc.splitTextToSize(String(value), maxWidth - 40);
+      doc.text(lines, margin + 40, yPosition);
+      yPosition += 5 + (lines.length - 1) * 4;
+    };
+
+    // Cabeçalho
+    doc.setFillColor(239, 68, 68);
+    doc.rect(0, 0, pageWidth, 35, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont(undefined, "bold");
+    doc.text(
+      `RELATÓRIO DE VARREDURA - ${row.name.toUpperCase()}`,
+      pageWidth / 2,
+      15,
+      { align: "center" }
+    );
+    doc.setFontSize(12);
+    doc.text("CASA DE APOSTAS NÃO REGULAMENTADA", pageWidth / 2, 25, {
+      align: "center",
+    });
+
+    doc.setTextColor(0, 0, 0);
+    yPosition = 45;
+
+    // Badge de risco
+    const riskColors = {
+      Alto: [239, 68, 68],
+      Médio: [234, 179, 8],
+      Baixo: [34, 197, 94],
+    };
+    const riskColor = riskColors[row.risk] || [156, 163, 175];
+    doc.setFillColor(riskColor[0], riskColor[1], riskColor[2]);
+    doc.roundedRect(margin, yPosition, 45, 8, 2, 2, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont(undefined, "bold");
+    doc.text(
+      `RISCO ${row.risk.toUpperCase()}`,
+      margin + 22.5,
+      yPosition + 5.5,
+      { align: "center" }
+    );
+    doc.setTextColor(0, 0, 0);
+    yPosition += 15;
+
+    // INFORMAÇÕES GERAIS
+    addSection("INFORMAÇÕES GERAIS");
+    addField("Nome", row.name);
+    addField("Domínio", row.domain);
+    addField("URL Final", row.finalUrl);
+    addField("Status", row.status);
+
+    // INFORMAÇÕES TÉCNICAS
+    addSection("INFORMAÇÕES TÉCNICAS");
+    addField("IP", row.ip);
+    addField("Geolocalização", row.geolocation);
+    addField("Registrar", row.registrar);
+    addField("Data de Criação", row.creationDate);
+    addField("Data de Expiração", row.expirationDate);
+
+    // GATEWAY DE PAGAMENTO
+    addSection("GATEWAY DE PAGAMENTO");
+    addField("Domínio PG", row.pgDomain);
+    addField("Gateway", row.pgGateway);
+
+    // INFORMAÇÕES PIX
+    addSection("INFORMAÇÕES PIX");
+    addField("Recebedor PIX", row.pixReceiver);
+    addField("CNPJ PIX", row.pixCnpj);
+    addField("URL PIX", row.pixUrl);
+
+    // REGISTRO E PROPRIEDADE
+    addSection("REGISTRO E PROPRIEDADE");
+    addField("Nome do Proprietário", row.ownerName);
+    addField("Registrado em", row.registeredIn);
+    addField("Endereço de Hospedagem", row.hostingAddress);
+    addField("CNPJ da BET", row.cnpj);
+    addField("CNPJ do Proprietário", row.ownerCnpj);
+
+    // EVIDÊNCIAS
+    addSection("EVIDÊNCIAS");
+    addField("Print Geral", row.printGeral);
+    addField("Print Pix", row.printPix);
+
+    // Rodapé
+    const totalPages = doc.internal.pages.length - 1;
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(128, 128, 128);
+      const timestamp = new Date().toLocaleString("pt-BR");
+      doc.text(
+        `Gerado em: ${timestamp}`,
+        margin,
+        doc.internal.pageSize.getHeight() - 10
+      );
+      doc.text(
+        `Página ${i} de ${totalPages}`,
+        pageWidth - margin - 30,
+        doc.internal.pageSize.getHeight() - 10
+      );
+    }
+
+    // Salvar PDF
+    doc.save(
+      `relatorio_${row.name.replace(/\s+/g, "_")}_${new Date().getTime()}.pdf`
+    );
   };
 
-  const handleRFClick = (row) => {
-    // Lógica para enviar para Receita Federal
-    console.log("Enviando para Receita Federal:", row);
-    alert("Dados enviados para a Receita Federal!");
-  };
-
-  const handleSendToBacen = () => {
-    // Lógica para enviar para o Banco Central
-    console.log("Enviando para Banco Central:", selectedRow);
-    alert("Dados enviados para o Banco Central!");
-    setModalOpen(false);
+  const handleImageClick = (src, title) => {
+    setImageModal({ open: true, src, title });
   };
 
   const getRiskBadgeColor = (risk) => {
@@ -49,39 +216,39 @@ const BetSitesTable = ({ results }) => {
             <tr>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Casa de Apostas
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Presença Digital
+                Prints
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Informações Legais
+                Informações Técnicas
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Métodos de Pagamento
+                Gateway e PIX
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                API
+                Registro e Propriedade
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Avaliação de Risco
+                Ações
               </th>
             </tr>
           </thead>
@@ -89,177 +256,240 @@ const BetSitesTable = ({ results }) => {
             {results.map((row) => (
               <tr key={row.id} className="hover:bg-gray-50">
                 {/* Casa de Apostas */}
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-900 mb-1">
-                      {row.name}
-                    </span>
-                    <a
-                      href={`https://${row.domain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline"
-                    >
-                      {row.domain}
-                    </a>
-                    <span className="text-xs text-gray-500 mt-1">
-                      Criado em: {row.creationDate}
-                    </span>
-                  </div>
-                </td>
-
-                {/* Presença Digital */}
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {row.platforms.map((platform) => (
-                        <span
-                          key={platform}
-                          className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800"
+                <td className="px-4 py-4">
+                  <div className="flex flex-col space-y-2">
+                    <div>
+                      <span className="text-sm font-bold text-gray-900">
+                        {row.name}
+                      </span>
+                      <span
+                        className={`ml-2 px-2 py-1 text-xs rounded-full border font-medium ${getRiskBadgeColor(
+                          row.risk
+                        )}`}
+                      >
+                        Risco {row.risk}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <div>
+                        <span className="text-xs text-gray-500">Domínio:</span>{" "}
+                        <a
+                          href={row.domain}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
                         >
-                          {platform}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-4 text-xs">
-                      <div>
-                        <span className="text-gray-500">Seguidores:</span>{" "}
-                        <span className="font-medium text-gray-700">
-                          {row.followers.toLocaleString()}
-                        </span>
+                          {row.domain}
+                        </a>
                       </div>
                       <div>
-                        <span className="text-gray-500">Posts:</span>{" "}
-                        <span className="font-medium text-gray-700">
-                          {row.posts}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Influenciadores: {row.influenciadores}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Última atividade: {row.lastActivity}
-                    </div>
-                  </div>
-                </td>
-
-                {/* Informações Legais */}
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <div className="mb-2">
-                      <span className="text-xs text-gray-500">CNPJ:</span>{" "}
-                      <span className="text-xs font-medium text-gray-700">
-                        {row.cnpj}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs text-gray-500">Status:</span>{" "}
-                      <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 border border-red-200">
-                        {row.status}
-                      </span>
-                    </div>
-                  </div>
-                </td>
-
-                {/* Métodos de Pagamento */}
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <div className="mb-2">
-                      <span className="text-xs text-gray-500">Gateways:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {row.gateways.map((gateway) => (
-                          <span
-                            key={gateway}
-                            className="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-100"
-                          >
-                            {gateway}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-xs text-gray-500">Bancos:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {row.banks.map((bank) => (
-                          <span
-                            key={bank}
-                            className="px-2 py-1 text-xs rounded-full bg-gray-50 text-gray-700 border border-gray-200"
-                          >
-                            {bank}
-                          </span>
-                        ))}
+                        <span className="text-xs text-gray-500">
+                          URL Final:
+                        </span>{" "}
+                        <a
+                          href={row.finalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          {row.finalUrl}
+                        </a>
                       </div>
                     </div>
                   </div>
                 </td>
 
-                {/* API */}
-                <td className="px-6 py-4">
+                {/* Prints */}
+                <td className="px-4 py-4">
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => handleBacenClick(row)}
-                      className="px-3 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      onClick={() =>
+                        handleImageClick(
+                          row.printGeral,
+                          "Print Geral - " + row.name
+                        )
+                      }
+                      className="px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2"
                     >
-                      BACEN
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Print Geral
                     </button>
                     <button
-                      onClick={() => handleRFClick(row)}
-                      className="px-3 py-2 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      onClick={() =>
+                        handleImageClick(
+                          row.printPix,
+                          "Print Pix - " + row.name
+                        )
+                      }
+                      className="px-4 py-2 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 flex items-center justify-center gap-2"
                     >
-                      RF
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                        />
+                      </svg>
+                      Print Pix
                     </button>
                   </div>
                 </td>
 
-                {/* Avaliação de Risco */}
-                <td className="px-6 py-4">
-                  <div className="flex flex-col items-center justify-center">
-                    <span
-                      className={`px-3 py-1 text-sm rounded-full border font-medium ${getRiskBadgeColor(
-                        row.risk
-                      )}`}
-                    >
-                      Risco {row.risk}
-                    </span>
-
-                    {/* Indicador visual de risco */}
-                    <div className="w-full mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${
-                          row.risk === "Alto"
-                            ? "bg-red-500 w-full"
-                            : row.risk === "Médio"
-                            ? "bg-yellow-500 w-2/3"
-                            : "bg-green-500 w-1/3"
-                        }`}
-                      ></div>
+                {/* Informações Técnicas */}
+                <td className="px-4 py-4">
+                  <div className="flex flex-col space-y-1 text-xs">
+                    <div className="bg-blue-50 p-2 rounded">
+                      <span className="text-gray-600 font-medium">IP:</span>{" "}
+                      <span className="text-gray-900 font-mono">{row.ip}</span>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <span className="text-gray-600 font-medium">
+                        Geolocalização:
+                      </span>{" "}
+                      <span className="text-gray-900">{row.geolocation}</span>
+                    </div>
+                    <div className="bg-purple-50 p-2 rounded">
+                      <span className="text-gray-600 font-medium">
+                        Registrar:
+                      </span>{" "}
+                      <span className="text-gray-900">{row.registrar}</span>
+                    </div>
+                    <div className="p-2 rounded border border-gray-200">
+                      <div className="mb-1">
+                        <span className="text-gray-600">Criação:</span>{" "}
+                        <span className="text-gray-900">
+                          {row.creationDate}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Expiração:</span>{" "}
+                        <span className="text-gray-900">
+                          {row.expirationDate}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* Modal BACEN */}
-      {modalOpen && selectedRow && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            {/* Overlay */}
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              onClick={() => setModalOpen(false)}
-            ></div>
+                {/* Gateway e PIX */}
+                <td className="px-4 py-4">
+                  <div className="flex flex-col space-y-2 text-xs">
+                    <div className="bg-green-50 p-2 rounded border border-green-200">
+                      <div className="font-medium text-green-800 mb-1">
+                        Gateway de Pagamento
+                      </div>
+                      <div className="mb-1">
+                        <span className="text-gray-600">Domínio PG:</span>{" "}
+                        <a
+                          href={row.pgDomain}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline break-all"
+                        >
+                          {row.pgDomain}
+                        </a>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Gateway:</span>{" "}
+                        <span className="text-gray-900 break-words">
+                          {row.pgGateway}
+                        </span>
+                      </div>
+                    </div>
 
-            {/* Modal */}
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
+                      <div className="font-medium text-yellow-800 mb-1">
+                        Informações PIX
+                      </div>
+                      <div className="mb-1">
+                        <span className="text-gray-600">Recebedor:</span>{" "}
+                        <span className="text-gray-900 font-semibold">
+                          {row.pixReceiver}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">CNPJ PIX:</span>{" "}
+                        <span className="text-gray-900 font-mono">
+                          {row.pixCnpj}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                {/* Registro e Propriedade */}
+                <td className="px-4 py-4">
+                  <div className="flex flex-col space-y-2 text-xs">
+                    <div className="bg-indigo-50 p-2 rounded border border-indigo-200">
+                      <div className="font-medium text-indigo-800 mb-1">
+                        Proprietário
+                      </div>
+                      <div className="mb-1">
+                        <span className="text-gray-600">Nome:</span>{" "}
+                        <span className="text-gray-900">{row.ownerName}</span>
+                      </div>
+                      <div className="mb-1">
+                        <span className="text-gray-600">Registrado em:</span>{" "}
+                        <span className="text-gray-900">
+                          {row.registeredIn}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Endereço:</span>{" "}
+                        <span className="text-gray-900">
+                          {row.hostingAddress}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="bg-red-50 p-2 rounded border border-red-200">
+                      <div className="font-medium text-red-800 mb-1">CNPJs</div>
+                      <div className="mb-1">
+                        <span className="text-gray-600">CNPJ BET:</span>{" "}
+                        <span className="text-gray-900">{row.cnpj}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">
+                          CNPJ Proprietário:
+                        </span>{" "}
+                        <span className="text-gray-900">{row.ownerCnpj}</span>
+                      </div>
+                      <div className="mt-2">
+                        <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 border border-red-300">
+                          {row.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                {/* Ações */}
+                <td className="px-4 py-4">
+                  <button
+                    onClick={() => handleDownloadPDF(row)}
+                    className="p-3 text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center justify-center"
+                    title="Download PDF"
+                  >
                     <svg
-                      className="h-6 w-6 text-blue-600"
+                      className="w-5 h-5"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -268,131 +498,76 @@ const BetSitesTable = ({ results }) => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                  </div>
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                      Enviar para Banco Central (BACEN)
-                    </h3>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-                    {/* Informações da casa de apostas */}
-                    <div className="mt-2 space-y-3">
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Casa de Apostas
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {selectedRow.name}
-                        </p>
-                        <p className="text-xs text-blue-600">
-                          {selectedRow.domain}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Criado em: {selectedRow.creationDate}
-                        </p>
-                      </div>
+      {/* Modal de Imagem Ampliada */}
+      {imageModal.open && (
+        <div className="fixed inset-0 z-[60] overflow-y-auto bg-black bg-opacity-90">
+          <div className="flex items-center justify-center min-h-screen p-4">
+            {/* Overlay clicável */}
+            <div
+              className="fixed inset-0 cursor-pointer"
+              onClick={() => setImageModal({ open: false, src: "", title: "" })}
+            ></div>
 
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Presença Digital
-                        </h4>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {selectedRow.platforms.map((platform) => (
-                            <span
-                              key={platform}
-                              className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800"
-                            >
-                              {platform}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Seguidores: {selectedRow.followers.toLocaleString()} |
-                          Posts: {selectedRow.posts}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Influenciadores: {selectedRow.influenciadores} |
-                          Última atividade: {selectedRow.lastActivity}
-                        </p>
-                      </div>
+            {/* Modal com imagem grande */}
+            <div className="relative bg-white rounded-lg shadow-2xl transform transition-all max-w-7xl w-full z-10">
+              {/* Header do modal */}
+              <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {imageModal.title}
+                </h3>
+                <button
+                  onClick={() =>
+                    setImageModal({ open: false, src: "", title: "" })
+                  }
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2 transition-colors"
+                  title="Fechar (ESC)"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Informações Legais
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          CNPJ: {selectedRow.cnpj}
-                        </p>
-                        <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 border border-red-200">
-                          {selectedRow.status}
-                        </span>
-                      </div>
-
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Métodos de Pagamento
-                        </h4>
-                        <div className="mt-1">
-                          <p className="text-xs text-gray-500">Gateways:</p>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {selectedRow.gateways.map((gateway) => (
-                              <span
-                                key={gateway}
-                                className="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-100"
-                              >
-                                {gateway}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="mt-2">
-                          <p className="text-xs text-gray-500">Bancos:</p>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {selectedRow.banks.map((bank) => (
-                              <span
-                                key={bank}
-                                className="px-2 py-1 text-xs rounded-full bg-gray-50 text-gray-700 border border-gray-200"
-                              >
-                                {bank}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Avaliação de Risco
-                        </h4>
-                        <span
-                          className={`px-3 py-1 text-sm rounded-full border font-medium ${getRiskBadgeColor(
-                            selectedRow.risk
-                          )}`}
-                        >
-                          Risco {selectedRow.risk}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+              {/* Imagem em tamanho grande */}
+              <div className="p-4 bg-gray-100">
+                <div
+                  className="flex items-center justify-center"
+                  style={{ maxHeight: "80vh" }}
+                >
+                  <img
+                    src={imageModal.src}
+                    alt={imageModal.title}
+                    className="max-w-full max-h-[80vh] object-contain rounded shadow-lg"
+                  />
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={handleSendToBacen}
-                >
-                  Enviar ao Banco Central
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setModalOpen(false)}
-                >
-                  Cancelar
-                </button>
+
+              {/* Footer com dica */}
+              <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+                <p className="text-sm text-gray-600 text-center">
+                  Clique fora da imagem ou pressione ESC para fechar
+                </p>
               </div>
             </div>
           </div>

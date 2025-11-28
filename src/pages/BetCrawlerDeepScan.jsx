@@ -21,40 +21,16 @@ const BetCrawlerDeepScan = () => {
 
   // Função para simular a detecção contínua de sites de apostas
   const simulateContinuousScan = () => {
-    // Inicialmente, mostrar alguns resultados
-    if (results.length === 0) {
-      const initialResults = betCrawlerData.slice(0, 10);
-      setResults(initialResults);
+    // Mostrar todos os resultados de uma vez
+    setResults(betCrawlerData);
 
-      // Atualizar estatísticas iniciais
-      setScanStats({
-        sitesAnalyzed: 1250,
-        profilesScanned: 3780,
-        postsAnalyzed: 15420,
-        lastDetection: new Date().toLocaleTimeString(),
-      });
-    }
-
-    // Configurar intervalo para adicionar novos resultados periodicamente
-    scanIntervalRef.current = setInterval(() => {
-      // Adicionar um novo resultado aleatório a cada intervalo
-      const remainingItems = betCrawlerData.filter(
-        (item) => !results.some((r) => r.id === item.id)
-      );
-
-      if (remainingItems.length > 0) {
-        const randomIndex = Math.floor(Math.random() * remainingItems.length);
-        const newItem = remainingItems[randomIndex];
-
-        setResults((prevResults) => [...prevResults, newItem]);
-
-        // Atualizar estatística de última detecção
-        setScanStats((prev) => ({
-          ...prev,
-          lastDetection: new Date().toLocaleTimeString(),
-        }));
-      }
-    }, 8000); // Adicionar um novo a cada 8 segundos
+    // Atualizar estatísticas iniciais
+    setScanStats({
+      sitesAnalyzed: 1250,
+      profilesScanned: 3780,
+      postsAnalyzed: 15420,
+      lastDetection: new Date().toLocaleTimeString(),
+    });
 
     // Configurar intervalo para atualizar estatísticas continuamente
     statsIntervalRef.current = setInterval(() => {
