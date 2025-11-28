@@ -53,7 +53,7 @@ export const betCrawlerData = [
     status: "Não Regulamentada",
     risk: "Alto",
     printGeral: "/images/trembetGeral.png",
-    printPix: "/images/trembetPix.jpg",
+    printPix: "/images/trembetPix.png",
   },
   {
     id: 2,
@@ -78,7 +78,7 @@ export const betCrawlerData = [
     status: "Não Regulamentada",
     risk: "Alto",
     printGeral: "/images/0lhfh22Geral.png",
-    printPix: "/images/0lhfh22Pix.jpg",
+    printPix: "/images/0lhfh22Pix.png",
   },
   {
     id: 3,
@@ -153,7 +153,7 @@ export const betCrawlerData = [
     status: "Não Regulamentada",
     risk: "Alto",
     printGeral: "/images/goldendubai777Geral.png",
-    printPix: "/images/goldendubai777Pix.jpg",
+    printPix: "/images/goldendubai777Pix.png",
   },
   {
     id: 6,
@@ -178,7 +178,7 @@ export const betCrawlerData = [
     status: "Não Regulamentada",
     risk: "Alto",
     printGeral: "/images/fortunerabbit777Geral.png",
-    printPix: "/images/fortunerabbit777Pix.jpg",
+    printPix: "/images/fortunerabbit777Pix.png",
   },
   {
     id: 7,
@@ -203,7 +203,7 @@ export const betCrawlerData = [
     status: "Não Regulamentada",
     risk: "Alto",
     printGeral: "/images/dduu5dGeral.png",
-    printPix: "/images/dduu5dPix.jpg",
+    printPix: "/images/dduu5dPix.png",
   },
   {
     id: 8,
