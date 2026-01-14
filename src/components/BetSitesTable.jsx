@@ -1,5 +1,25 @@
 import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Registrar componentes do Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const BetSitesTable = ({ results }) => {
   const [imageModal, setImageModal] = useState({
@@ -201,6 +221,139 @@ const BetSitesTable = ({ results }) => {
     }
   };
 
+  // Processar dados para o gráfico com empresas e gateways
+  const companyGatewayData = {};
+
+  results.forEach((result) => {
+    const company = result.pixReceiver;
+    const gateway = result.pgGateway;
+
+    if (!companyGatewayData[company]) {
+      companyGatewayData[company] = {};
+    }
+
+    if (!companyGatewayData[company][gateway]) {
+      companyGatewayData[company][gateway] = 0;
+    }
+
+    companyGatewayData[company][gateway]++;
+  });
+
+  // Criar lista de todas as empresas
+  const allCompanies = Object.entries(companyGatewayData).sort((a, b) => {
+    const totalA = Object.values(a[1]).reduce((sum, val) => sum + val, 0);
+    const totalB = Object.values(b[1]).reduce((sum, val) => sum + val, 0);
+    return totalB - totalA;
+  });
+
+  // Obter todos os gateways únicos
+  const allGateways = [...new Set(results.map((r) => r.pgGateway))];
+
+  // Cores para cada gateway
+  const gatewayColors = {
+    "Mw lp LTDA": "rgba(59, 130, 246, 0.8)",
+    "Ajc Gateway LTDA": "rgba(147, 51, 234, 0.8)",
+    "Simpay Pagamentos LTDA": "rgba(236, 72, 153, 0.8)",
+    "Hyper Wallet lp LTDA": "rgba(251, 146, 60, 0.8)",
+    "Mt lp S.A.": "rgba(34, 197, 94, 0.8)",
+    "Tycoon Technology lip S.A": "rgba(234, 179, 8, 0.8)",
+    "Fitbank lp": "rgba(239, 68, 68, 0.8)",
+    "Sabts Scd S.A": "rgba(99, 102, 241, 0.8)",
+    "A55 Scd S.A.": "rgba(168, 85, 247, 0.8)",
+  };
+
+  // Criar datasets para cada gateway
+  const datasets = allGateways.map((gateway) => ({
+    label: gateway,
+    data: allCompanies.map(([company, gateways]) => gateways[gateway] || 0),
+    backgroundColor: gatewayColors[gateway] || "rgba(156, 163, 175, 0.8)",
+    borderColor:
+      gatewayColors[gateway]?.replace("0.8", "1") || "rgba(156, 163, 175, 1)",
+    borderWidth: 1,
+  }));
+
+  const chartData = {
+    labels: allCompanies.map(([company]) => company),
+    datasets: datasets,
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          padding: 10,
+          font: {
+            size: 10,
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: `Empresas e Gateways de Pagamento Detectados (${results.length} resultados)`,
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        color: "#1f2937",
+        padding: {
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          title: function (context) {
+            // Mostrar o nome completo no tooltip
+            return allCompanies[context[0].dataIndex][0];
+          },
+          label: function (context) {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y;
+            return `${label}: ${value} casa${value !== 1 ? "s" : ""}`;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        stacked: true,
+        ticks: {
+          stepSize: 1,
+        },
+        title: {
+          display: true,
+          text: "Quantidade de Casas de Apostas",
+          font: {
+            size: 12,
+          },
+        },
+      },
+      x: {
+        stacked: true,
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: {
+            size: 9,
+          },
+          callback: function (value, index) {
+            const label = this.getLabelForValue(value);
+            const maxLength = 15;
+            if (label.length > maxLength) {
+              return label.substring(0, maxLength) + "...";
+            }
+            return label;
+          },
+        },
+      },
+    },
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -208,6 +361,13 @@ const BetSitesTable = ({ results }) => {
           Resultados da Varredura das últimas 6 horas ({results.length} casas de
           apostas detectadas)
         </h2>
+      </div>
+
+      {/* Gráfico de Distribuição de Empresas e Gateways */}
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div style={{ height: "500px" }}>
+          <Bar data={chartData} options={chartOptions} />
+        </div>
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow">
