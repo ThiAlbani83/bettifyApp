@@ -4,6 +4,7 @@ import ScanStatusPanel from "../components/ScanStatusPanel";
 import LiveScanIndicator from "../components/LiveScanIndicator";
 import BetSitesTable from "../components/BetSitesTable";
 import ErrorAlert from "../components/ErrorAlert";
+import AnalyticsCharts from "../components/AnalyticsCharts";
 
 const BetCrawlerDeepScan = () => {
   const [results, setResults] = useState([]);
@@ -64,12 +65,14 @@ const BetCrawlerDeepScan = () => {
 
       {/* Painel de status da varredura em tempo real */}
       <ScanStatusPanel scanStats={scanStats} />
-
       {/* Componente de erro */}
       <ErrorAlert message={error} />
 
       {/* Indicador de varredura em tempo real */}
-      <LiveScanIndicator resultsCount={results.length} />
+      {/*  <LiveScanIndicator resultsCount={results.length} /> */}
+
+      {/* Seção de Gráficos (Acordeão) */}
+      {results.length > 0 && <AnalyticsCharts />}
 
       {/* Tabela de resultados */}
       {results.length > 0 && <BetSitesTable results={results} />}

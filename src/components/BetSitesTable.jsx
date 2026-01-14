@@ -138,13 +138,12 @@ const BetSitesTable = ({ results }) => {
 
     // GATEWAY DE PAGAMENTO
     addSection("GATEWAY DE PAGAMENTO");
-    addField("Domínio PG", row.pgDomain);
     addField("Gateway", row.pgGateway);
 
     // INFORMAÇÕES PIX
-    addSection("INFORMAÇÕES PIX");
+    addSection("Favorecido");
     addField("Recebedor PIX", row.pixReceiver);
-    addField("CNPJ PIX", row.pixCnpj);
+    addField("CNPJ", row.pixCnpj);
     addField("URL PIX", row.pixUrl);
 
     // REGISTRO E PROPRIEDADE
@@ -206,7 +205,8 @@ const BetSitesTable = ({ results }) => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">
-          Resultados da Varredura ({results.length} casas de apostas detectadas)
+          Resultados da Varredura das últimas 6 horas ({results.length} casas de
+          apostas detectadas)
         </h2>
       </div>
 
@@ -396,19 +396,7 @@ const BetSitesTable = ({ results }) => {
                       <div className="font-medium text-green-800 mb-1">
                         Gateway de Pagamento
                       </div>
-                      <div className="mb-1">
-                        <span className="text-gray-600">Domínio PG:</span>{" "}
-                        <a
-                          href={row.pgDomain}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline break-all"
-                        >
-                          {row.pgDomain}
-                        </a>
-                      </div>
                       <div>
-                        <span className="text-gray-600">Gateway:</span>{" "}
                         <span className="text-gray-900 break-words">
                           {row.pgGateway}
                         </span>
@@ -417,7 +405,7 @@ const BetSitesTable = ({ results }) => {
 
                     <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
                       <div className="font-medium text-yellow-800 mb-1">
-                        Informações PIX
+                        Favorecido
                       </div>
                       <div className="mb-1">
                         <span className="text-gray-600">Recebedor:</span>{" "}
@@ -426,7 +414,7 @@ const BetSitesTable = ({ results }) => {
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">CNPJ PIX:</span>{" "}
+                        <span className="text-gray-600">CNPJ:</span>{" "}
                         <span className="text-gray-900 font-mono">
                           {row.pixCnpj}
                         </span>
