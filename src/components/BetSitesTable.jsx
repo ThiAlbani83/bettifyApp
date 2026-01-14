@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import { Bar } from "react-chartjs-2";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,6 +28,7 @@ const BetSitesTable = ({ results }) => {
     src: "",
     title: "",
   });
+  const [isChartExpanded, setIsChartExpanded] = useState(false);
 
   // Fechar modal de imagem com tecla ESC
   useEffect(() => {
@@ -356,18 +358,39 @@ const BetSitesTable = ({ results }) => {
 
   return (
     <div>
+      {/* Acordeão do Gráfico de Empresas e Gateways */}
+      <div className="mb-6 bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+        <button
+          onClick={() => setIsChartExpanded(!isChartExpanded)}
+          className="w-full px-6 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors duration-150 border-b border-gray-200"
+        >
+          <h2 className="text-base font-medium text-gray-700">
+            Empresas e Gateways de Pagamento Detectados ({results.length}{" "}
+            resultados)
+          </h2>
+          {isChartExpanded ? (
+            <FaChevronUp className="text-sm text-gray-500" />
+          ) : (
+            <FaChevronDown className="text-sm text-gray-500" />
+          )}
+        </button>
+
+        {isChartExpanded && (
+          <div className="p-6 bg-gray-50">
+            <div className="bg-white p-4 rounded-lg shadow">
+              <div style={{ height: "500px" }}>
+                <Bar data={chartData} options={chartOptions} />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">
           Resultados da Varredura das últimas 6 horas ({results.length} casas de
           apostas detectadas)
         </h2>
-      </div>
-
-      {/* Gráfico de Distribuição de Empresas e Gateways */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <div style={{ height: "500px" }}>
-          <Bar data={chartData} options={chartOptions} />
-        </div>
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow">
