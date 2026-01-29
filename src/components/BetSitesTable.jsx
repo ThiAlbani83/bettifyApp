@@ -821,13 +821,13 @@ const BetSitesTable = ({ results }) => {
                           "_blank",
                         )
                       }
-                      className="p-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
+                      className="p-1 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
                       title="Enviar ao Bacen"
                     >
                       <img
                         src={bacenIcon}
                         alt="Bacen"
-                        className="w-4 h-4 object-contain"
+                        className="w-6 h-6 object-contain"
                       />
                     </button>
                     <button
