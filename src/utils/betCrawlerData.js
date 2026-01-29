@@ -38,7 +38,7 @@ export const betCrawlerData = [
       "00020101021226880014br.gov.bcb.pix2566qrcode.microcashif.com.br/pix/bbe86e0e-c9f9-4480-af90-1282a5b17c5b5204000053039865802BR5909Vitalcred6008SaoPaulo62070503***63041122",
     cnpj: "Não encontrado",
     pgGateway: "Mw lp LTDA",
-    pixReceiver: "Ivy Gateway LTDA",
+    pixReceiver: "Ivi Gateway LTDA",
     pixCnpj: "37.728.324/0001-50",
     // Informações BCB
     nomeReduzido: "MW IP LTDA.",

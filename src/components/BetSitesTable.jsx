@@ -93,7 +93,11 @@ const BetSitesTable = ({ results }) => {
     };
 
     const addSection = (title) => {
-      yPosition += 5;
+      if (yPosition > 260) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      yPosition += 6;
       doc.setFillColor(59, 130, 246);
       doc.rect(margin, yPosition - 5, maxWidth, 8, "F");
       doc.setTextColor(255, 255, 255);
@@ -101,19 +105,23 @@ const BetSitesTable = ({ results }) => {
       doc.setFont(undefined, "bold");
       doc.text(title, margin + 2, yPosition);
       doc.setTextColor(0, 0, 0);
-      yPosition += 8;
+      yPosition += 12;
     };
 
     const addField = (label, value) => {
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
       doc.setFontSize(9);
       doc.setFont(undefined, "bold");
       doc.setTextColor(55, 65, 81);
       doc.text(label + ":", margin, yPosition);
       doc.setFont(undefined, "normal");
       doc.setTextColor(0, 0, 0);
-      const lines = doc.splitTextToSize(String(value), maxWidth - 40);
-      doc.text(lines, margin + 40, yPosition);
-      yPosition += 5 + (lines.length - 1) * 4;
+      const lines = doc.splitTextToSize(String(value), maxWidth - 70);
+      doc.text(lines, margin + 70, yPosition);
+      yPosition += 7 + (lines.length - 1) * 5;
     };
 
     // Cabeçalho
@@ -550,7 +558,7 @@ const BetSitesTable = ({ results }) => {
                   <div className="flex flex-col space-y-2 text-xs">
                     <div className="bg-blue-50 p-2 rounded border border-blue-200">
                       <div className="space-y-1">
-                        <div>
+                        <div className="flex items-center gap-2">
                           <span className="text-gray-600 font-medium block">
                             Nome Reduzido:
                           </span>
@@ -558,7 +566,7 @@ const BetSitesTable = ({ results }) => {
                             {row.nomeReduzido || "N/A"}
                           </span>
                         </div>
-                        <div>
+                        <div className="flex items-center gap-2">
                           <span className="text-gray-600 font-medium block">
                             ISPB:
                           </span>
@@ -821,30 +829,34 @@ const BetSitesTable = ({ results }) => {
                           "_blank",
                         )
                       }
-                      className="p-1 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
-                      title="Enviar ao Bacen"
+                      className="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm font-medium"
+                      title="Consultar API do Banco Central"
                     >
-                      <img
-                        src={bacenIcon}
-                        alt="Bacen"
-                        className="w-6 h-6 object-contain"
-                      />
+                      BACEN
                     </button>
                     <button
                       onClick={() =>
                         window.open(
-                          `https://api.caixa.gov.br/consulta-instituicao/${row.cnpjBCB.replace(/[^\d]/g, "")}`,
+                          `https://servicos.receita.fazenda.gov.br/Servicos/cnpjreva/Cnpjreva_Solicitacao.asp?cnpj=${row.cnpjBCB.replace(/[^\d]/g, "")}`,
                           "_blank",
                         )
                       }
-                      className="p-2 text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 flex items-center justify-center"
-                      title="Enviar a CEF"
+                      className="px-3 py-1 text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm font-medium"
+                      title="Consultar API da Receita Federal"
                     >
-                      <img
-                        src={cefIcon}
-                        alt="CEF"
-                        className="w-4 h-4 object-contain"
-                      />
+                      RF
+                    </button>
+                    <button
+                      onClick={() =>
+                        window.open(
+                          `https://sistemas.anatel.gov.br/easp/Novo/ConsultaProcesso/Tela.asp?SistemaUnificado=1&cnpj=${row.cnpjBCB.replace(/[^\d]/g, "")}`,
+                          "_blank",
+                        )
+                      }
+                      className="px-3 py-1 text-white bg-purple-600 hover:bg-purple-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-sm font-medium"
+                      title="Consultar API da ANATEL"
+                    >
+                      ANATEL
                     </button>
                   </div>
                 </td>
