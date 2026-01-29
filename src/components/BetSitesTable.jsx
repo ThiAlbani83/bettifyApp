@@ -186,7 +186,7 @@ const BetSitesTable = ({ results }) => {
 
     // INFORMAÇÕES DO BANCO CENTRAL DO BRASIL (BCB)
     addSection("INFORMAÇÕES DO BANCO CENTRAL DO BRASIL (BCB)");
-    addField("Nome Reduzido", row.nomeReduzido);
+    addField("Banco", row.nomeReduzido);
     addField("ISPB", row.ispb);
     addField("CNPJ", row.cnpjBCB);
     addField("Tipo de Instituição", row.tipoInstituicao);
@@ -560,7 +560,7 @@ const BetSitesTable = ({ results }) => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="text-gray-600 font-medium block">
-                            Nome Reduzido:
+                            Banco:
                           </span>
                           <span className="text-gray-900 font-semibold">
                             {row.nomeReduzido || "N/A"}
@@ -572,6 +572,14 @@ const BetSitesTable = ({ results }) => {
                           </span>
                           <span className="text-gray-900 font-mono">
                             {row.ispb || "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-600 font-medium block">
+                            Gateway:
+                          </span>
+                          <span className="text-gray-900 font-mono">
+                            {row.pixReceiver || "N/A"}
                           </span>
                         </div>
                       </div>

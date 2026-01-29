@@ -28,7 +28,7 @@ const getTwoDaysAgoDate = () => {
 };
 
 export const betCrawlerData = [
-  {
+  /* {
     id: 1,
     name: "TremBet",
     domain: "https://trembet.com",
@@ -64,7 +64,7 @@ export const betCrawlerData = [
     risk: "Alto",
     printGeral: "/images/trembetGeral.png",
     printPix: "/images/trembetPix.jpeg",
-  },
+  }, */
   {
     id: 2,
     name: "0lhfh22",
@@ -74,7 +74,7 @@ export const betCrawlerData = [
     pixUrl: "Não encontrado",
     cnpj: "Não encontrado",
     pgGateway: "Mw lp LTDA",
-    pixReceiver: "Ajc Gateway LTDA",
+    pixReceiver: "Elite Digital LTDA",
     pixCnpj: "63.868.900/0001-75",
     // Informações BCB
     nomeReduzido: "SANTS SCD S.A.",
