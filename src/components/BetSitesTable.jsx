@@ -182,7 +182,7 @@ const BetSitesTable = ({ results }) => {
 
     // GATEWAY DE PAGAMENTO
     addSection("GATEWAY DE PAGAMENTO");
-    addField("Gateway", row.pgGateway);
+    addField("Beneficiário", row.pgGateway);
 
     // INFORMAÇÕES DO BANCO CENTRAL DO BRASIL (BCB)
     addSection("INFORMAÇÕES DO BANCO CENTRAL DO BRASIL (BCB)");
@@ -576,7 +576,7 @@ const BetSitesTable = ({ results }) => {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-gray-600 font-medium block">
-                            Gateway:
+                            Beneficiário:
                           </span>
                           <span className="text-gray-900 font-mono">
                             {row.pixReceiver || "N/A"}
